@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: Car-Insurance-System
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:car_insurance_system.db
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    show-sql: true
