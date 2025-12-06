@@ -22,8 +22,9 @@ public class ClientMapper {
         client.setLName(completeProfileDto.lName());
         client.setIdNumber(completeProfileDto.idNumber());
         client.setPhoneNumber(completeProfileDto.phoneNumber());
-        client.setRole(Roles.CLIENT);
         client.setProfileCompleted(true);
+        client.setAccountActive(true);
+        client.setRole(Roles.CLIENT);
         return client;
     }
     public RegisterDto toRegisterDto(Client client){

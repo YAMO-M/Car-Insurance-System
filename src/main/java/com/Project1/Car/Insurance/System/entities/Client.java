@@ -1,6 +1,7 @@
 package com.Project1.Car.Insurance.System.entities;
 
 import jakarta.persistence.*;
+import jdk.jfr.BooleanFlag;
 import lombok.*;
 
 import java.util.UUID;
@@ -24,7 +25,7 @@ public class Client {
 
     private String address;
 
-    @Column(unique = true,updatable = false)
+    @Column(unique = true)
     private String idNumber;
 
     @Column(nullable = false,unique = true)
@@ -37,9 +38,12 @@ public class Client {
     private String phoneNumber;
 
     @Enumerated(value = EnumType.STRING)
-    private Roles role = Roles.CLIENT;
+    private Roles role;
 
+    @Column(nullable = false)
     boolean profileCompleted = false;
+    @Column(nullable = false)
+    boolean isAccountActive;
 
 
 

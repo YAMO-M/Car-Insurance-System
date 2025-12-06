@@ -23,8 +23,9 @@ public class ClientController {
         return ResponseEntity.ok(dto);
     }
     @PutMapping(path = "/completeprofile/{id}")
-    public ResponseEntity<?> register(@Valid @RequestBody CompleteProfileDto completeProfileDto,@PathVariable UUID id){
+    public ResponseEntity<?> completeRegistraction(@Valid @RequestBody CompleteProfileDto completeProfileDto,@PathVariable UUID id){
         CompleteProfileDto dto = clientService.completeProfile(completeProfileDto,id);
         return ResponseEntity.ok(dto);
     }
+
 }
