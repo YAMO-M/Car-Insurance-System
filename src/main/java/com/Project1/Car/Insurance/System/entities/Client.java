@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jdk.jfr.BooleanFlag;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -41,9 +43,20 @@ public class Client {
     private Roles role;
 
     @Column(nullable = false)
-    boolean profileCompleted = false;
+    private boolean profileCompleted = false;
+
     @Column(nullable = false)
-    boolean isAccountActive;
+    private boolean isAccountActive;
+
+    @Column(name = "policies")
+    @OneToMany(mappedBy = "client",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Policy> policies = new ArrayList<>();
+
+    @Column(name = "vehicles")
+    @OneToMany(mappedBy = "client",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Vehicle> vehicles = new ArrayList<>();
+
+
 
 
 

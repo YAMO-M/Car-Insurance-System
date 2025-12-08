@@ -2,6 +2,7 @@ package com.Project1.Car.Insurance.System.controllers;
 
 import com.Project1.Car.Insurance.System.dtos.CompleteProfileDto;
 import com.Project1.Car.Insurance.System.dtos.RegisterDto;
+import com.Project1.Car.Insurance.System.dtos.UpdateProfileDto;
 import com.Project1.Car.Insurance.System.services.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,12 @@ public class ClientController {
     @PutMapping(path = "/completeprofile/{id}")
     public ResponseEntity<?> completeRegistraction(@Valid @RequestBody CompleteProfileDto completeProfileDto,@PathVariable UUID id){
         CompleteProfileDto dto = clientService.completeProfile(completeProfileDto,id);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PutMapping(path = "/updateprofile/{id}")
+    public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, @PathVariable UUID id){
+        CompleteProfileDto dto = clientService.updateProfile(updateProfileDto,id);
         return ResponseEntity.ok(dto);
     }
 

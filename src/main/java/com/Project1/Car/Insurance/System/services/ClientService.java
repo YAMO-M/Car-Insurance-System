@@ -3,6 +3,7 @@ package com.Project1.Car.Insurance.System.services;
 
 import com.Project1.Car.Insurance.System.dtos.CompleteProfileDto;
 import com.Project1.Car.Insurance.System.dtos.RegisterDto;
+import com.Project1.Car.Insurance.System.dtos.UpdateProfileDto;
 import com.Project1.Car.Insurance.System.entities.Client;
 import com.Project1.Car.Insurance.System.mappers.ClientMapper;
 import com.Project1.Car.Insurance.System.repositories.ClientRepository;
@@ -45,5 +46,15 @@ public class ClientService {
 
         clientRepository.save(client);
         return clientMapper.toCompletedProfileDto(client);
+    }
+
+    @Transactional
+    public CompleteProfileDto updateProfile(@Valid UpdateProfileDto updateProfileDto, UUID id) {
+        if(!clientRepository.existsById(id)) throw new IllegalStateException("client does not exist");
+         Client client = clientRepository.findClientByClientId(id);
+         client.setAddress(updateProfileDto.address());
+         client.setPhoneNumber(updateProfileDto.phoneNumber());
+         clientRepository.save(client);
+         return  clientMapper.toCompletedProfileDto(client);
     }
 }

@@ -6,6 +6,6 @@ spring:
     url: jdbc:sqlite:car_insurance_system.db
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     database-platform: org.hibernate.community.dialect.SQLiteDialect
     show-sql: true
