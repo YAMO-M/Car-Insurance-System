@@ -9,19 +9,22 @@ public record CompleteProfileDto(
         @NotNull
         @Size(min = 3)
         String fName,
+
         @Size(min = 3)
         @NotNull
         String lName,
+
         @Size(min = 5)
         @NotNull
         String address,
+
         @NotNull
         @Size(min = 13,max = 13)
         //@Pattern()
-        String idNumber,
+        String nationalId,
+
         @NotNull
         @Size(min = 10,max = 10)
-
         //@Pattern()
         String phoneNumber
 ) {

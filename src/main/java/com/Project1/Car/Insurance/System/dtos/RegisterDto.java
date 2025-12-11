@@ -14,7 +14,6 @@ public record RegisterDto(
 
         @NotNull(message = "email must not be null")
         @Pattern(regexp = "[A-Za-z\\d]{8,20}$" ,message = "password must be 8-20 char, only letters or numbers")
-
         String password
 ) {
 }

@@ -18,6 +18,22 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID vehicleId;
 
+    @Column(nullable = false)
+    private String make;
+
+    @Column(nullable = false)
+    private String model;
+
+    @Column(nullable = false)
+    private String vin;
+
+    @Column(nullable = false)
+    private Integer year;
+
+    @Column(nullable = false)
+    private String licence_plate;
+
+    // RELATIONSHIPS
     @OneToOne(mappedBy = "vehicle")
     private Policy policy;
 

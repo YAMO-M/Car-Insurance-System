@@ -31,11 +31,13 @@ public class Policy {
     private LocalDate endDate;
 
     @Column(nullable = false)
-    private Boolean policyStatus; //let ai decide
+    @Enumerated(value = EnumType.STRING)
+    private PolicyStatus policyStatus;
 
     @Column(nullable = false)
     private Double premiumAmount;
 
+    //RELATIONSHIPS
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Client client;

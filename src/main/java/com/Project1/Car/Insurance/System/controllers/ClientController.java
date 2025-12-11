@@ -1,5 +1,6 @@
 package com.Project1.Car.Insurance.System.controllers;
 
+import com.Project1.Car.Insurance.System.dtos.ClientDto;
 import com.Project1.Car.Insurance.System.dtos.CompleteProfileDto;
 import com.Project1.Car.Insurance.System.dtos.RegisterDto;
 import com.Project1.Car.Insurance.System.dtos.UpdateProfileDto;
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping(path = "/api/v1/clients")
 @RequiredArgsConstructor
 public class ClientController {
     private final ClientService clientService;
@@ -23,15 +24,15 @@ public class ClientController {
         RegisterDto dto = clientService.register(registerDto);
         return ResponseEntity.ok(dto);
     }
-    @PutMapping(path = "/completeprofile/{id}")
-    public ResponseEntity<?> completeRegistraction(@Valid @RequestBody CompleteProfileDto completeProfileDto,@PathVariable UUID id){
-        CompleteProfileDto dto = clientService.completeProfile(completeProfileDto,id);
+    @PutMapping(path = "/{client_id}/complete-profile")
+    public ResponseEntity<?> completeRegistration(@Valid @RequestBody CompleteProfileDto completeProfileDto, @PathVariable UUID client_id){
+        CompleteProfileDto dto = clientService.completeProfile(completeProfileDto,client_id);
         return ResponseEntity.ok(dto);
     }
 
-    @PutMapping(path = "/updateprofile/{id}")
-    public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, @PathVariable UUID id){
-        CompleteProfileDto dto = clientService.updateProfile(updateProfileDto,id);
+    @PutMapping(path = "/{client_id}")
+    public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, @PathVariable UUID client_id){
+        CompleteProfileDto dto = clientService.updateProfile(updateProfileDto,client_id);
         return ResponseEntity.ok(dto);
     }
 

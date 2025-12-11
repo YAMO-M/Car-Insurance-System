@@ -1,6 +1,7 @@
 package com.Project1.Car.Insurance.System.services;
 
 
+import com.Project1.Car.Insurance.System.dtos.ClientDto;
 import com.Project1.Car.Insurance.System.dtos.CompleteProfileDto;
 import com.Project1.Car.Insurance.System.dtos.RegisterDto;
 import com.Project1.Car.Insurance.System.dtos.UpdateProfileDto;
@@ -36,7 +37,7 @@ public class ClientService {
    @Transactional
     public CompleteProfileDto completeProfile(@Valid CompleteProfileDto completeProfileDto, UUID id) {
         if(!clientRepository.existsById(id)) throw new IllegalStateException("client does not exist");
-        if(clientRepository.existsClientByIdNumber(completeProfileDto.idNumber())) throw new IllegalStateException("client already exist");
+        if(clientRepository.existsClientByNationalId(completeProfileDto.nationalId())) throw new IllegalStateException("client already exist");
         Client client = clientMapper
                 .toCompletedClient(
                         clientRepository.findClientByClientId(id),
@@ -50,11 +51,21 @@ public class ClientService {
 
     @Transactional
     public CompleteProfileDto updateProfile(@Valid UpdateProfileDto updateProfileDto, UUID id) {
-        if(!clientRepository.existsById(id)) throw new IllegalStateException("client does not exist");
+        if(!clientRepository.existsById(id))
+            throw new IllegalStateException("client does not exist");
+
          Client client = clientRepository.findClientByClientId(id);
          client.setAddress(updateProfileDto.address());
          client.setPhoneNumber(updateProfileDto.phoneNumber());
          clientRepository.save(client);
+
          return  clientMapper.toCompletedProfileDto(client);
+    }
+
+    public ClientDto getClient(UUID clientId) {
+        if(!clientRepository.existsById(clientId))
+            throw new IllegalStateException("client does not exist");
+
+        return clientMapper.toClientDto(clientRepository.findClientByClientId(clientId));
     }
 }

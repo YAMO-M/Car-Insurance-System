@@ -3,6 +3,7 @@ package com.Project1.Car.Insurance.System.services;
 import com.Project1.Car.Insurance.System.dtos.PolicyDto;
 import com.Project1.Car.Insurance.System.entities.Client;
 import com.Project1.Car.Insurance.System.entities.Policy;
+import com.Project1.Car.Insurance.System.entities.PolicyStatus;
 import com.Project1.Car.Insurance.System.entities.Vehicle;
 import com.Project1.Car.Insurance.System.mappers.PolicyMapper;
 import com.Project1.Car.Insurance.System.repositories.ClientRepository;
@@ -45,15 +46,16 @@ public class PolicyService {
         Policy policy = Policy
                 .builder()
                 .vehicle(vehicle)
+                .client(client)
                 .policyType(policyDto.policyType())
                 .startDate(now)
                 .endDate(now.plusMonths(1))
-                .policyStatus(true)
+                .policyStatus(PolicyStatus.ACTIVE)
                 .premiumAmount(100.00)
                 .build();
 
         client.getPolicies().add(policy);
-        policyRepository.save(policy);
+       // policyRepository.save(policy); not needed since we used cascade
         clientRepository.save(client);
         return policyMapper.toPolicyDto(policy);
     }

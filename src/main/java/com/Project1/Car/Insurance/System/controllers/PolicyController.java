@@ -1,7 +1,6 @@
 package com.Project1.Car.Insurance.System.controllers;
 
 import com.Project1.Car.Insurance.System.dtos.PolicyDto;
-import com.Project1.Car.Insurance.System.entities.Policy;
 import com.Project1.Car.Insurance.System.services.PolicyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
