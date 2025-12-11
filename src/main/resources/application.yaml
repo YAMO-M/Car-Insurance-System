@@ -9,3 +9,6 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.community.dialect.SQLiteDialect
     show-sql: true
+    jwt:
+      secret: 73ed2ff650177ecd33852495e8c777e2dabe1f0e0e74915830098563dba6ac16
+      expiration-ms : 3600000 #1 hour

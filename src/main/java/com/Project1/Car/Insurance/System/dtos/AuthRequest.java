@@ -1,0 +1,7 @@
+package com.Project1.Car.Insurance.System.dtos;
+
+public record AuthRequest(
+        String email,
+        String password
+) {
+}

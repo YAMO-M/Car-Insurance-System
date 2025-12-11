@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping(path = "/admin")
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;

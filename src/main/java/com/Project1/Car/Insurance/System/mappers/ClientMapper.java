@@ -2,14 +2,14 @@ package com.Project1.Car.Insurance.System.mappers;
 
 import com.Project1.Car.Insurance.System.dtos.ClientDto;
 import com.Project1.Car.Insurance.System.dtos.CompleteProfileDto;
-import com.Project1.Car.Insurance.System.dtos.RegisterDto;
+import com.Project1.Car.Insurance.System.dtos.RegisterRequest;
 import com.Project1.Car.Insurance.System.entities.Client;
 import org.springframework.stereotype.Component;
 
+
 @Component
 public class ClientMapper {
-
-    public Client toClient(RegisterDto dto){
+    public Client toClient(RegisterRequest dto){
         return Client
                 .builder()
                 .email(dto.email())
@@ -26,13 +26,7 @@ public class ClientMapper {
         client.setAccountActive(true);
         return client;
     }
-    public RegisterDto toRegisterDto(Client client){
-        return RegisterDto
-                .builder()
-                .email(client.getEmail())
-                .password(client.getPassword())
-                .build();
-    }
+
     public CompleteProfileDto toCompletedProfileDto(Client client){
         return CompleteProfileDto
                 .builder()

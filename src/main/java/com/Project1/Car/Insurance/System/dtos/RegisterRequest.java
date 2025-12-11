@@ -4,10 +4,11 @@ package com.Project1.Car.Insurance.System.dtos;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.Builder;
+import lombok.Setter;
 
-@Builder
-public record RegisterDto(
+
+
+public record RegisterRequest(
         @NotNull(message = "email must not be null")
         @Email(message = "enter valid email")
         String email,

@@ -2,16 +2,17 @@ package com.Project1.Car.Insurance.System.controllers;
 
 import com.Project1.Car.Insurance.System.dtos.ClientDto;
 import com.Project1.Car.Insurance.System.dtos.CompleteProfileDto;
-import com.Project1.Car.Insurance.System.dtos.RegisterDto;
+import com.Project1.Car.Insurance.System.dtos.RegisterRequest;
 import com.Project1.Car.Insurance.System.dtos.UpdateProfileDto;
 import com.Project1.Car.Insurance.System.services.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
-
 
 @RestController
 @RequestMapping(path = "/api/v1/clients")
@@ -20,20 +21,33 @@ public class ClientController {
     private final ClientService clientService;
 
     @PostMapping(path = "/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto){
-        RegisterDto dto = clientService.register(registerDto);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest){
+       clientService.register(registerRequest);
+        return ResponseEntity.ok("Registered");
     }
-    @PutMapping(path = "/{client_id}/complete-profile")
-    public ResponseEntity<?> completeRegistration(@Valid @RequestBody CompleteProfileDto completeProfileDto, @PathVariable UUID client_id){
-        CompleteProfileDto dto = clientService.completeProfile(completeProfileDto,client_id);
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @PutMapping(path = "/complete-profile")
+    public ResponseEntity<?> completeRegistration(@Valid @RequestBody CompleteProfileDto completeProfileDto, @AuthenticationPrincipal UserDetails userDetails){
+        String email = userDetails.getUsername();
+        CompleteProfileDto dto = clientService.completeProfile(completeProfileDto,email);
         return ResponseEntity.ok(dto);
     }
 
-    @PutMapping(path = "/{client_id}")
-    public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, @PathVariable UUID client_id){
-        CompleteProfileDto dto = clientService.updateProfile(updateProfileDto,client_id);
+    @PreAuthorize("hasRole('CLIENT')")
+    @PutMapping
+    public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, Authentication authentication){
+        String email = authentication.getName();
+        CompleteProfileDto dto = clientService.updateProfile(updateProfileDto,email);
         return ResponseEntity.ok(dto);
     }
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping
+    public ResponseEntity<?> getProfile( Authentication authentication){
+        String email = authentication.getName();
+        ClientDto dto = clientService.getClient(email);
+        return ResponseEntity.ok(dto);
+    }
+
 
 }
