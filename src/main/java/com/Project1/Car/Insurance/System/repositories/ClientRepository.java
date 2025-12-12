@@ -1,6 +1,8 @@
 package com.Project1.Car.Insurance.System.repositories;
 
 import com.Project1.Car.Insurance.System.entities.Client;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +19,5 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     boolean existsClientByNationalId(String nationalId);
 
 
+    boolean existsClientByPhoneNumber(@NotNull @Size(min = 10,max = 10) String s);
 }

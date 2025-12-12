@@ -41,18 +41,13 @@ public class ClientMapper {
     public ClientDto toClientDto(Client client) {
         return ClientDto
                 .builder()
-                .clientId(client.getClientId())
                 .fName(client.getFName())
                 .lName(client.getLName())
                 .email(client.getEmail())
                 .nationalId(client.getNationalId())
                 .address(client.getAddress())
                 .phoneNumber(client.getPhoneNumber())
-                .role(client.getRole())
-                .isAccountActive(client.isAccountActive())
                 .profileCompleted(client.isProfileCompleted())
-                .policies(client.getPolicies())
-                .vehicles(client.getVehicles())
                 .build();
     }
 }

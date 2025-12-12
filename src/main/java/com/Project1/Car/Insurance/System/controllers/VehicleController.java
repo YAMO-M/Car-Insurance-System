@@ -1,16 +1,19 @@
 package com.Project1.Car.Insurance.System.controllers;
 
-import com.Project1.Car.Insurance.System.dtos.UpdateVehicleDto;
-import com.Project1.Car.Insurance.System.dtos.VehicleDto;
+import com.Project1.Car.Insurance.System.dtos.UpdateVehicleRequest;
+import com.Project1.Car.Insurance.System.dtos.VehicleRequest;
+import com.Project1.Car.Insurance.System.dtos.VehicleResponse;
 import com.Project1.Car.Insurance.System.services.VehicleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -19,21 +22,34 @@ public class VehicleController {
     private final VehicleService vehicleService;
     @PostMapping
     @PreAuthorize("hasRole('CLIENT')")
-    public VehicleDto addVehicle(@Valid @RequestBody VehicleDto vehicleDto, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<?> addVehicle(@Valid @RequestBody VehicleRequest vehicleRequest, @AuthenticationPrincipal UserDetails userDetails){
         String email = userDetails.getUsername();
-        return vehicleService.addVehicle(vehicleDto,email);
+        VehicleResponse dto = vehicleService.addVehicle(vehicleRequest,email);
+        return ResponseEntity.status(201).body(dto) ;
     }
 
-//    @PutMapping("/{userId}")
-//    public VehicleDto updateVehicle(@PathVariable UUID userId, @Valid @RequestBody UpdateVehicleDto updateVehicleDto ){
-//        return vehicleService.updateVehicle(updateVehicleDto,userId);
-//    }
-//    @GetMapping("/{userId}")
-//    public VehicleDto getVehicle(@PathVariable UUID userId){
-//        return vehicleService.getVehicle(userId);
-//    }
-//    @DeleteMapping("/{userId}")
-//    public VehicleDto updateVehicle(@PathVariable UUID userId){
-//        return vehicleService.deleteVehicle(userId);
-//    }
+    @PutMapping
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<?> updateVehicle(@Valid @RequestBody UpdateVehicleRequest updateVehicleRequest, @AuthenticationPrincipal UserDetails userDetails ){
+        String email = userDetails.getUsername();
+        VehicleResponse dto = vehicleService.updateVehicle(updateVehicleRequest,email);
+        return ResponseEntity.ok(dto);
+    }
+    @GetMapping("/{vehicleId}")
+    @PreAuthorize("hasRole('CLIENT')")
+    public VehicleResponse getVehicle(@AuthenticationPrincipal UserDetails userDetails,@PathVariable UUID vehicleId){
+        String email = userDetails.getUsername();
+        return vehicleService.getVehicle(vehicleId,email);
+    }
+
+    @DeleteMapping("/{vehicleId}")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<?> deleteVehicle(@AuthenticationPrincipal UserDetails clientDetails,@PathVariable UUID vehicleId){
+        String email = clientDetails.getUsername();
+        vehicleService.deleteVehicle(vehicleId,email);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 }

@@ -57,9 +57,10 @@ public class SecurityConfig {
     @Bean // prevent other websites to make requests
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration  configuration  = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8080","http://localhost:63342"));
         configuration.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS")); // browser sends options first to check id server allows cors from that origin ;
         configuration.setAllowCredentials(false); // since we're using jwt no cookies
+        configuration.setAllowedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",configuration);
