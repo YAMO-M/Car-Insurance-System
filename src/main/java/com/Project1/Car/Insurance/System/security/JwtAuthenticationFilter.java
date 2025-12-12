@@ -23,22 +23,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-          final String authHeader = request.getHeader("Authorization");
+          final String authHeader = request.getHeader("Authorization"); // get the header, which contains the token
           final String token;
           final String email;
 
           if(authHeader == null || !authHeader.startsWith("Bearer ")){
-              filterChain.doFilter(request,response);
+              filterChain.doFilter(request,response); // maybe user is login/register continue with the filter chain
               return;
           }
-          token = authHeader.substring(7);
+          token = authHeader.substring(7); //skip the bearer in the header
           try{
+
               email = jwtService.extractEmail(token);
+
           }catch (JwtException e){
               filterChain.doFilter(request,response);
               return;
           }
-          if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
+          if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){ // check if user already authenticated. prevents re-authenticating user
               UserDetails userDetails = clientDetailsService.loadUserByUsername(email);
               if(jwtService.isTokenValid(token,userDetails)){
                   UsernamePasswordAuthenticationToken authenticationToken =
@@ -46,11 +48,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                   userDetails,
                                   null
                                   ,userDetails.getAuthorities()
-                          );
+                          ); // create authenticating object
                   authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                  SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                  SecurityContextHolder.getContext().setAuthentication(authenticationToken); // this is what makes the user logged in.
               }
           }
-          filterChain.doFilter(request, response);
+          filterChain.doFilter(request, response); // allow other filters to run
     }
 }

@@ -22,29 +22,29 @@ public class ClientController {
 
     @PostMapping(path = "/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest){
-       clientService.register(registerRequest);
-        return ResponseEntity.ok("Registered");
+        clientService.register(registerRequest);
+        return ResponseEntity.ok("Account Registered");
     }
 
     @PreAuthorize("hasRole('CLIENT')")
     @PutMapping(path = "/complete-profile")
     public ResponseEntity<?> completeRegistration(@Valid @RequestBody CompleteProfileDto completeProfileDto, @AuthenticationPrincipal UserDetails userDetails){
         String email = userDetails.getUsername();
-        CompleteProfileDto dto = clientService.completeProfile(completeProfileDto,email);
-        return ResponseEntity.ok(dto);
+        clientService.completeProfile(completeProfileDto,email);
+        return ResponseEntity.ok("Profile Completed");
     }
 
     @PreAuthorize("hasRole('CLIENT')")
     @PutMapping
-    public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, Authentication authentication){
-        String email = authentication.getName();
-        CompleteProfileDto dto = clientService.updateProfile(updateProfileDto,email);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, @AuthenticationPrincipal UserDetails userDetails){
+        String email = userDetails.getUsername();
+        clientService.updateProfile(updateProfileDto,email);
+        return ResponseEntity.ok("Profile Updated");
     }
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping
-    public ResponseEntity<?> getProfile( Authentication authentication){
-        String email = authentication.getName();
+    public ResponseEntity<?> getProfile( @AuthenticationPrincipal UserDetails userDetails){
+        String email = userDetails.getUsername();
         ClientDto dto = clientService.getClient(email);
         return ResponseEntity.ok(dto);
     }

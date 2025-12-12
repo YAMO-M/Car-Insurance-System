@@ -23,6 +23,7 @@ public class JwtService {
     @Value(value = "${spring.jpa.jwt.expiration-ms}")
     private long expirationMs;
 
+    // create a secrete signiture
     private Key getSigningKey(){
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -40,6 +41,7 @@ public class JwtService {
         );
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expirationMs);
+
         return Jwts
                 .builder()
                 .setClaims(claims)
@@ -47,9 +49,9 @@ public class JwtService {
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
+                .compact(); // same a build, building the jwt string
     }
-    
+
     public boolean isTokenValid(String token, UserDetails userDetails){
         final String email = extractEmail(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -71,7 +73,7 @@ public class JwtService {
                 .parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(token) // decodes, verifies signiture, validates expiration
                 .getBody()
                 .getSubject();
     }

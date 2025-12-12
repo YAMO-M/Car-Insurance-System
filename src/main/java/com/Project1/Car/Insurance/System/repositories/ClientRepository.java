@@ -15,4 +15,6 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     Client findClientByClientId(UUID id);
 
     boolean existsClientByNationalId(String nationalId);
+
+
 }

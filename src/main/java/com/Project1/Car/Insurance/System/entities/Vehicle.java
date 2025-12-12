@@ -1,10 +1,7 @@
 package com.Project1.Car.Insurance.System.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -13,6 +10,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -5,6 +5,9 @@ import com.Project1.Car.Insurance.System.dtos.VehicleDto;
 import com.Project1.Car.Insurance.System.services.VehicleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -14,9 +17,11 @@ import java.util.UUID;
 @RequestMapping("/api/v1/vehicles")
 public class VehicleController {
     private final VehicleService vehicleService;
-    @PostMapping("/{userId}")
-    public VehicleDto addVehicle(@PathVariable UUID userId, @Valid @RequestBody VehicleDto vehicleDto){
-       return vehicleService.addVehicle(vehicleDto,userId);
+    @PostMapping
+    @PreAuthorize("hasRole('CLIENT')")
+    public VehicleDto addVehicle(@Valid @RequestBody VehicleDto vehicleDto, @AuthenticationPrincipal UserDetails userDetails){
+        String email = userDetails.getUsername();
+        return vehicleService.addVehicle(vehicleDto,email);
     }
 
 //    @PutMapping("/{userId}")
