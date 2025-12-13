@@ -4,6 +4,7 @@ package com.Project1.Car.Insurance.System.services;
 import com.Project1.Car.Insurance.System.dtos.*;
 import com.Project1.Car.Insurance.System.entities.Client;
 import com.Project1.Car.Insurance.System.mappers.ClientMapper;
+import com.Project1.Car.Insurance.System.mappers.PolicyMapper;
 import com.Project1.Car.Insurance.System.mappers.VehicleMapper;
 import com.Project1.Car.Insurance.System.repositories.ClientRepository;
 import jakarta.validation.Valid;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final VehicleMapper vehicleMapper;
+    private final PolicyMapper policyMapper;
     private final ClientMapper clientMapper;
     private final PasswordEncoder passwordEncoder;
 
@@ -67,15 +69,15 @@ public class ClientService {
         checkIfClientExists(email);
         return clientMapper.toClientDto(clientRepository.getClientByEmail(email));
     }
-//    public List<PolicyResponse> getAllPolicies(String email) {
-//        checkIfClientExists(email);
-//        return clientRepository
-//                .getClientByEmail(email)
-//                .getPolicies()
-//                .stream()
-//                .map(policyMapper::toPolicyResponse)
-//                .toList();
-//    }
+    public List<PolicyResponse> getAllPolicies(String email) {
+        checkIfClientExists(email);
+        return clientRepository
+                .getClientByEmail(email)
+                .getPolicies()
+                .stream()
+                .map(policyMapper::toPolicyResponse)
+                .toList();
+    }
 
     public List<VehicleResponse> getAllVehicles(String email) {
         checkIfClientExists(email);
@@ -100,5 +102,7 @@ public class ClientService {
 
         clientRepository.save(client);
     }
+
+
 }
 

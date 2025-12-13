@@ -67,12 +67,12 @@ public class ClientController {
     }
 
 
-//    @PreAuthorize("hasRole('CLIENT')")
-//    @GetMapping(path = "/policies")
-//    public ResponseEntity<List<PolicyResponse>> getAllPolicies(@AuthenticationPrincipal UserDetails userDetails){
-//        String email = userDetails.getUsername();
-//        List<PolicyResponse> dtos = clientService.getAllPolicies(email);
-//        return ResponseEntity.ok(dtos);
-//    }
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping(path = "/policies")
+    public ResponseEntity<List<PolicyResponse>> getAllClient_Policies(@AuthenticationPrincipal UserDetails userDetails){
+        String email = userDetails.getUsername();
+        List<PolicyResponse> dtos = clientService.getAllPolicies(email);
+        return ResponseEntity.ok(dtos);
+    }
 
 }

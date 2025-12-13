@@ -1,12 +1,15 @@
 package com.Project1.Car.Insurance.System.controllers;
 
-import com.Project1.Car.Insurance.System.dtos.PolicyDto;
+import com.Project1.Car.Insurance.System.dtos.PolicyRequest;
+import com.Project1.Car.Insurance.System.dtos.PolicyResponse;
 import com.Project1.Car.Insurance.System.services.PolicyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping( "/api/v1/policies")
@@ -14,8 +17,11 @@ import java.util.UUID;
 public class PolicyController {
     private final PolicyService policyService;
 
-    @PostMapping("/user/{id}")
-    public PolicyDto addPolicy(@Valid @RequestBody PolicyDto policyDto, @PathVariable UUID id){
-           return policyService.addPolicy(policyDto,id);
+    @PostMapping
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<PolicyResponse> addPolicy(@Valid @RequestBody PolicyRequest policyRequest, @AuthenticationPrincipal UserDetails clientDetails){
+        String email = clientDetails.getUsername();
+        PolicyResponse dto = policyService.addPolicy(policyRequest, email);
+        return ResponseEntity.ok(dto);
     }
 }

@@ -1,6 +1,5 @@
 package com.Project1.Car.Insurance.System.services;
 
-import com.Project1.Car.Insurance.System.entities.Client;
 import com.Project1.Car.Insurance.System.repositories.AdminRepository;
 import com.Project1.Car.Insurance.System.repositories.ClientRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +21,9 @@ public class AdminService {
     }
     private void changeAccountStatus(UUID id, boolean status) {
         if (!clientRepository.existsById(id)) throw new IllegalStateException("client does not exist");
-        Client client = clientRepository.findClientByClientId(id);
-        client.setAccountActive(status);
-        clientRepository.save(client);
+        //Client client = clientRepository.id);
+      //  client.setAccountActive(status);
+       // clientRepository.save(client);
     }
 
 
