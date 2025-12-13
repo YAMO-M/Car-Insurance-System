@@ -1,13 +1,11 @@
 package com.Project1.Car.Insurance.System.controllers;
 
 import com.Project1.Car.Insurance.System.dtos.*;
-import com.Project1.Car.Insurance.System.entities.Policy;
 import com.Project1.Car.Insurance.System.services.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +62,13 @@ public class ClientController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
+    public ResponseEntity<ClientDto> activateClient(@AuthenticationPrincipal UserDetails clientDetails){
+        String email = clientDetails.getUsername();
+        ClientDto dto = clientService.activateClient(email);
+        return ResponseEntity.ok(dto);
     }
 
     @PreAuthorize("hasRole('CLIENT')")

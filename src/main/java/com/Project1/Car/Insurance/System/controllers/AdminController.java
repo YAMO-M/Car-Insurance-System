@@ -1,26 +1,35 @@
 package com.Project1.Car.Insurance.System.controllers;
 
+import com.Project1.Car.Insurance.System.dtos.ClientDto;
+import com.Project1.Car.Insurance.System.dtos.PolicyResponse;
 import com.Project1.Car.Insurance.System.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+import java.util.List;
 
 @RestController
-@RequestMapping(path = "/admin")
+@RequestMapping(path = "/api/v1/admin")
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
 
-    @PutMapping(path = "/users/deactivate/{id}")
-    public ResponseEntity<?> deActivateClient(@PathVariable UUID id){
-        adminService.deActivateClient(id);
-        return ResponseEntity.ok(" Account deActivated");
+    @GetMapping("/clients")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ClientDto>> getAllClients(){
+        List<ClientDto> clientDtos = adminService.getAllClients();
+        return ResponseEntity.ok(clientDtos);
     }
-    @PutMapping(path = "/users/activate/{id}")
-    public ResponseEntity<?> ActivateClient(@PathVariable UUID id){
-        adminService.ActivateClient(id);
-        return ResponseEntity.ok(" Account Activated");
+    @GetMapping("/policies")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<PolicyResponse>> getAllPolicies(){
+        List<PolicyResponse> policyResponses = adminService.getAllPolicies();
+        return ResponseEntity.ok(policyResponses);
     }
+
+
+
 }

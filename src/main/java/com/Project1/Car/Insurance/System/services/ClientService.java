@@ -3,6 +3,8 @@ package com.Project1.Car.Insurance.System.services;
 
 import com.Project1.Car.Insurance.System.dtos.*;
 import com.Project1.Car.Insurance.System.entities.Client;
+import com.Project1.Car.Insurance.System.entities.Policy;
+import com.Project1.Car.Insurance.System.entities.PolicyStatus;
 import com.Project1.Car.Insurance.System.mappers.ClientMapper;
 import com.Project1.Car.Insurance.System.mappers.PolicyMapper;
 import com.Project1.Car.Insurance.System.mappers.VehicleMapper;
@@ -96,12 +98,28 @@ public class ClientService {
     @Transactional
     public void deleteClient(String email) {
         checkIfClientExists(email);
-
         Client client = clientRepository.getClientByEmail(email);
+        List<Policy> policies = client
+                .getPolicies()
+                .stream()
+                .filter(
+                        policy ->
+                                policy.getPolicyStatus()
+                                        .equals(PolicyStatus.ACTIVE)
+                )
+                .toList();
+        if(!policies.isEmpty())
+            throw new IllegalStateException("Client currently have active policies");
         client.setAccountActive(false);
-
         clientRepository.save(client);
     }
+   public ClientDto activateClient(String email){
+        checkIfClientExists(email);
+        Client client = clientRepository.getClientByEmail(email);
+        client.setAccountActive(true);
+        return clientMapper
+                .toClientDto(clientRepository.save(client));
+   }
 
 
 }

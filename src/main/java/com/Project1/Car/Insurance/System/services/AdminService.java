@@ -1,34 +1,36 @@
 package com.Project1.Car.Insurance.System.services;
 
-import com.Project1.Car.Insurance.System.repositories.AdminRepository;
+import com.Project1.Car.Insurance.System.dtos.ClientDto;
+import com.Project1.Car.Insurance.System.dtos.PolicyResponse;
+import com.Project1.Car.Insurance.System.mappers.ClientMapper;
+import com.Project1.Car.Insurance.System.mappers.PolicyMapper;
 import com.Project1.Car.Insurance.System.repositories.ClientRepository;
+import com.Project1.Car.Insurance.System.repositories.PolicyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
     private final ClientRepository clientRepository;
-    private final AdminRepository adminRepository;
+    private final ClientMapper clientMapper;
+    private final PolicyRepository policyRepository;
+    private final PolicyMapper policyMapper;
 
-    public void deActivateClient(UUID id){
-        changeAccountStatus(id, false);
+    public List<ClientDto> getAllClients() {
+        return clientRepository
+                .findAll()
+                .stream()
+                .map(clientMapper::toClientDto)
+                .toList();
     }
-    public void ActivateClient(UUID id){
-        changeAccountStatus(id,true);
+    public List<PolicyResponse> getAllPolicies(){
+        return policyRepository
+                .findAll()
+                .stream()
+                .map(policyMapper::toPolicyResponse)
+                .toList();
     }
-    private void changeAccountStatus(UUID id, boolean status) {
-        if (!clientRepository.existsById(id)) throw new IllegalStateException("client does not exist");
-        //Client client = clientRepository.id);
-      //  client.setAccountActive(status);
-       // clientRepository.save(client);
-    }
-
-
-    
-    
-    
-
 }
