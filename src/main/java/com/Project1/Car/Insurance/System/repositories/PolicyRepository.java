@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface PolicyRepository extends JpaRepository<Policy, UUID>{
 
     boolean existsPolicyByVehicle_VehicleId(UUID vehicleId);
+
+    Policy findPoliciesByPolicyId(UUID policyId);
 }

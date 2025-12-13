@@ -66,7 +66,6 @@ public class ClientController {
                 .build();
     }
 
-
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping(path = "/policies")
     public ResponseEntity<List<PolicyResponse>> getAllClient_Policies(@AuthenticationPrincipal UserDetails userDetails){

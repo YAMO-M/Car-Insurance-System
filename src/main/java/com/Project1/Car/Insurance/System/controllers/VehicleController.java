@@ -22,7 +22,7 @@ public class VehicleController {
     private final VehicleService vehicleService;
     @PostMapping
     @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<?> addVehicle(@Valid @RequestBody VehicleRequest vehicleRequest, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<VehicleResponse> addVehicle(@Valid @RequestBody VehicleRequest vehicleRequest, @AuthenticationPrincipal UserDetails userDetails){
         String email = userDetails.getUsername();
         VehicleResponse dto = vehicleService.addVehicle(vehicleRequest,email);
         return ResponseEntity.status(201).body(dto) ;
@@ -30,16 +30,17 @@ public class VehicleController {
 
     @PutMapping
     @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<?> updateVehicle(@Valid @RequestBody UpdateVehicleRequest updateVehicleRequest, @AuthenticationPrincipal UserDetails userDetails ){
+    public ResponseEntity<VehicleResponse> updateVehicle(@Valid @RequestBody UpdateVehicleRequest updateVehicleRequest, @AuthenticationPrincipal UserDetails userDetails ){
         String email = userDetails.getUsername();
         VehicleResponse dto = vehicleService.updateVehicle(updateVehicleRequest,email);
         return ResponseEntity.ok(dto);
     }
     @GetMapping("/{vehicleId}")
     @PreAuthorize("hasRole('CLIENT')")
-    public VehicleResponse getVehicle(@AuthenticationPrincipal UserDetails userDetails,@PathVariable UUID vehicleId){
+    public ResponseEntity<VehicleResponse> getVehicle(@AuthenticationPrincipal UserDetails userDetails,@PathVariable UUID vehicleId){
         String email = userDetails.getUsername();
-        return vehicleService.getVehicle(vehicleId,email);
+        VehicleResponse dto =  vehicleService.getVehicle(vehicleId,email);
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{vehicleId}")
@@ -49,6 +50,7 @@ public class VehicleController {
         vehicleService.deleteVehicle(vehicleId,email);
         return ResponseEntity.noContent().build();
     }
+
 
 
 

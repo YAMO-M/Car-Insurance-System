@@ -47,7 +47,6 @@ public class VehicleService {
 
     public VehicleResponse updateVehicle(@Valid UpdateVehicleRequest updateVehicleDto, String email) {
         checkIfClientExists(email);
-        checkAccountCompletion(email);
 
         Vehicle vehicle = validateVehicle(updateVehicleDto.carId(),email);
         vehicle.setLicence_plate(updateVehicleDto.licence_plate());
@@ -67,8 +66,6 @@ public class VehicleService {
         checkIfClientExists(email);
         Vehicle vehicle = validateVehicle(vehicleId,email);
         return vehicleMapper.toVehicleResponse(vehicle);
-
-
     }
 
     public void deleteVehicle(UUID vehicleId, String email) {
