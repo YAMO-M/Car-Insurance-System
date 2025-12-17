@@ -33,6 +33,7 @@ public class VehicleService{
         Vehicle vehicle = vehicleMapper.toVehicle(vehicleRequest);
 
         if(vehicle.getYear() < LocalDate.now().minusYears(15).getYear()) throw new IllegalStateException(" Vehicle must be less than 15 years old");
+        if(vehicle.getYear() > LocalDate.now().getYear()) throw new  IllegalStateException("Car year invalid");
         if(vehicleRepository.existsVehicleByVin(vehicle.getVin()))
             throw  new IllegalStateException("vehicle already has a owner");
 

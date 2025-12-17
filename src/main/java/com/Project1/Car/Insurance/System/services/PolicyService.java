@@ -66,8 +66,52 @@ public class PolicyService {
                 );
     }
 
-    private Double calculatePremium(Integer year, LocalDate dateOfBirth, @NotNull PolicyType policyType) {
-        return 0.0;
+    private Double calculatePremium(Integer carYear, LocalDate dateOfBirth, @NotNull PolicyType policyType) {
+        double policyPrice = getPolicyPrice(policyType);
+
+        double carAgePrice = getCarAgePrice(carYear);
+
+        double driverAgePrice = getDriverAgePrice(dateOfBirth);
+
+        double premium = policyPrice * carAgePrice * driverAgePrice;
+
+        return Math.round(premium * 100.0) /100.0;
+    }
+
+    private double getDriverAgePrice(LocalDate dateOfBirth) {
+        int age = LocalDate.now().getYear() - dateOfBirth.getYear();
+
+        if(age < 21)
+            return 1.5;
+        else if( age < 61)
+            return 1.2;
+        else
+            return 1.5;
+
+    }
+
+    private double getCarAgePrice(Integer carYear) {
+        int currentYear = LocalDate.now().getYear();
+        int age = currentYear - carYear;
+
+
+
+
+        if(age < 3)
+            return 0.9;
+        else if(age < 8)
+            return 1;
+        else
+            return 1.5;
+    }
+
+    private double getPolicyPrice(@NotNull PolicyType policyType) {
+        if(policyType.equals(PolicyType.THIRD_PARTY))
+          return 500;
+        else if (policyType.equals(PolicyType.COMPREHENSIVE))
+            return 1200;
+        else
+            throw new IllegalStateException("Policy Type: " + policyType + " is not available");
     }
 
 
