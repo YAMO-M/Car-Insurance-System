@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final ClientDetailsService clientDetailsService;
+    private final CompositeUserDetailsService compositeUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
               return;
           }
           if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){ // check if user already authenticated. prevents re-authenticating user
-              UserDetails userDetails = clientDetailsService.loadUserByUsername(email);
+              UserDetails userDetails = compositeUserDetailsService.loadUserByUsername(email);
               if(jwtService.isTokenValid(token,userDetails)){
                   UsernamePasswordAuthenticationToken authenticationToken =
                           new UsernamePasswordAuthenticationToken(

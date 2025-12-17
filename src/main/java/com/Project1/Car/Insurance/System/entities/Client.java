@@ -2,6 +2,8 @@ package com.Project1.Car.Insurance.System.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,8 +35,9 @@ public class Client {
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    @Builder.Default
-    private Roles role = Roles.CLIENT;
+
+
+    private Roles role;
 
     @Column(nullable = false)
     private boolean isAccountActive;
@@ -52,6 +55,8 @@ public class Client {
     private String lName;
 
     private String address;
+
+    private LocalDate dateOfBirth;
 
     @Column(unique = true)
     private String nationalId;

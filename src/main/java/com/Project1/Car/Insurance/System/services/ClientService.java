@@ -5,6 +5,7 @@ import com.Project1.Car.Insurance.System.dtos.*;
 import com.Project1.Car.Insurance.System.entities.Client;
 import com.Project1.Car.Insurance.System.entities.Policy;
 import com.Project1.Car.Insurance.System.entities.PolicyStatus;
+import com.Project1.Car.Insurance.System.entities.Roles;
 import com.Project1.Car.Insurance.System.mappers.ClientMapper;
 import com.Project1.Car.Insurance.System.mappers.PolicyMapper;
 import com.Project1.Car.Insurance.System.mappers.VehicleMapper;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -34,23 +36,52 @@ public class ClientService {
 
         Client client = clientMapper.toClient(dto);
         client.setPassword(passwordEncoder.encode(client.getPassword()));
+        client.setRole(Roles.CLIENT);
         clientRepository.save(client);
     }
 
     @Transactional
     public CompleteProfileDto completeProfile(@Valid CompleteProfileDto completeProfileDto, String email) {
         checkIfClientExists(email);
+        LocalDate clientDoB = calculateDoB(completeProfileDto.nationalId());
+        if (!validateAge(clientDoB)) throw new IllegalStateException("Client must be at least 18 years old");
         if(clientRepository.existsClientByNationalId(completeProfileDto.nationalId())) throw new IllegalStateException("client with this national Id already exist");
         if(clientRepository.existsClientByPhoneNumber(completeProfileDto.phoneNumber())) throw new IllegalStateException("client with this phone number already exist");
+
         Client client = clientMapper
                 .toCompletedClient(
                         clientRepository.getClientByEmail(email),
                         completeProfileDto
                 );
 
+        client.setDateOfBirth(clientDoB);
 
         clientRepository.save(client);
         return clientMapper.toCompletedProfileDto(client);
+    }
+    private LocalDate calculateDoB(String nationalId) {
+        try {
+            int year = Integer.parseInt(nationalId.substring(0, 2));
+            int now = LocalDate.now().getYear() - 2000;
+
+            if(year > now) year+=1900; else year+=2000;
+
+            int month = Integer.parseInt(nationalId.substring(2, 4));
+            if (month > 12 || month < 0) throw new IllegalStateException("Valid month required");
+
+            int day = Integer.parseInt(nationalId.substring(4, 6));
+            if (day > 31 || day < 0) throw new IllegalStateException("Valid day required");
+
+            return LocalDate.of(year,month,day);
+
+
+        }
+        catch (NumberFormatException e){
+            throw new IllegalStateException("Valid National Id required");
+        }
+    }
+    boolean validateAge(LocalDate dob){
+        return dob.plusYears(18).isBefore(LocalDate.now());
     }
 
     @Transactional

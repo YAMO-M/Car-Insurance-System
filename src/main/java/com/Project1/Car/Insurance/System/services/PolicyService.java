@@ -2,17 +2,13 @@ package com.Project1.Car.Insurance.System.services;
 
 import com.Project1.Car.Insurance.System.dtos.PolicyRequest;
 import com.Project1.Car.Insurance.System.dtos.PolicyResponse;
-import com.Project1.Car.Insurance.System.dtos.VehicleResponse;
-import com.Project1.Car.Insurance.System.entities.Client;
-import com.Project1.Car.Insurance.System.entities.Policy;
-import com.Project1.Car.Insurance.System.entities.PolicyStatus;
-import com.Project1.Car.Insurance.System.entities.Vehicle;
+import com.Project1.Car.Insurance.System.entities.*;
 import com.Project1.Car.Insurance.System.mappers.PolicyMapper;
 import com.Project1.Car.Insurance.System.repositories.ClientRepository;
 import com.Project1.Car.Insurance.System.repositories.PolicyRepository;
 import com.Project1.Car.Insurance.System.repositories.VehicleRepository;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -50,6 +46,7 @@ public class PolicyService {
 
         if(policyRepository.existsPolicyByVehicle_VehicleId(policyRequest.vehicleId())) throw new IllegalStateException("vehicle already has policy");
         LocalDate now = LocalDate.now();
+        Double premiumAmount = calculatePremium(vehicle.getYear(),client.getDateOfBirth(),policyRequest.policyType());
         Policy policy = Policy
                 .builder()
                 .vehicle(vehicle)
@@ -58,7 +55,7 @@ public class PolicyService {
                 .startDate(now)
                 .endDate(now.plusMonths(1))
                 .policyStatus(PolicyStatus.PENDING)
-                .premiumAmount(100.00)
+                .premiumAmount(premiumAmount)
                 .build();
 
         client.getPolicies().add(policy);
@@ -68,6 +65,11 @@ public class PolicyService {
                 .toPolicyResponse(policyRepository.save(policy)
                 );
     }
+
+    private Double calculatePremium(Integer year, LocalDate dateOfBirth, @NotNull PolicyType policyType) {
+        return 0.0;
+    }
+
 
     private void validateClient(String email,UUID vehicleId){
         if(!clientRepository.existsClientByEmail(email))

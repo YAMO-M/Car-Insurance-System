@@ -10,16 +10,16 @@ import com.Project1.Car.Insurance.System.repositories.ClientRepository;
 import com.Project1.Car.Insurance.System.repositories.VehicleRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 
 @Service
 @RequiredArgsConstructor
-public class VehicleService {
+public class VehicleService{
     private final VehicleRepository vehicleRepository;
     private final ClientRepository clientRepository;
     private final VehicleMapper vehicleMapper;
@@ -32,6 +32,7 @@ public class VehicleService {
         Client client = clientRepository.getClientByEmail(email);
         Vehicle vehicle = vehicleMapper.toVehicle(vehicleRequest);
 
+        if(vehicle.getYear() < LocalDate.now().minusYears(15).getYear()) throw new IllegalStateException(" Vehicle must be less than 15 years old");
         if(vehicleRepository.existsVehicleByVin(vehicle.getVin()))
             throw  new IllegalStateException("vehicle already has a owner");
 
@@ -78,6 +79,7 @@ public class VehicleService {
         Vehicle vehicle = vehicleRepository.findByVehicleId(vehicleId);
         if(vehicle == null) throw new IllegalStateException("Vehicle not found");
         if(!vehicle.getClient().getEmail().equals(email)) throw new IllegalStateException("Forbidden access");
+
 
         return vehicle;
     }

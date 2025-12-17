@@ -1,5 +1,6 @@
 package com.Project1.Car.Insurance.System.config;
 
+import com.Project1.Car.Insurance.System.security.AdminDetailsService;
 import com.Project1.Car.Insurance.System.security.ClientDetailsService;
 import com.Project1.Car.Insurance.System.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -30,6 +31,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final ClientDetailsService clientDetailsService;
+    private final AdminDetailsService adminDetailsService;
 
     // my security rules
     @Bean
@@ -41,15 +43,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers("/api/v1/clients/register").permitAll()
-                                .requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no http sessions needed, jwt carry the auth info
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)// insert my filter in spring chain of filters
-                .authenticationProvider(authenticationProvider()); // tells spring how to authenticate the users
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);// insert my filter in spring chain of filters
         return http.build();
 
     }
@@ -68,16 +69,28 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() { // tell spring to use this to auth the users
+    public AuthenticationProvider clientAuthenticationProvider() { // tell spring to use this to auth the users
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(ClientDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());// using the same encoder
+        return authenticationProvider;
+    }
+    @Bean
+    public AuthenticationProvider AdminAuthenticationProvider() { // tell spring to use this to auth the users
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(AdminDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());// using the same encoder
         return authenticationProvider;
     }
 
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
-        return configuration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception{
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .authenticationProvider(clientAuthenticationProvider())
+                .authenticationProvider(AdminAuthenticationProvider())
+                .build();
+
     }
 
     @Bean
@@ -85,7 +98,9 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService ClientDetailsService(){
         return clientDetailsService;
     }
+    @Bean
+    public UserDetailsService AdminDetailsService(){ return  adminDetailsService; }
 }
