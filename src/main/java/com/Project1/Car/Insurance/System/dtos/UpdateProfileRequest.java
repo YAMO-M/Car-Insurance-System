@@ -3,28 +3,13 @@ package com.Project1.Car.Insurance.System.dtos;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 
-@Builder
-public record CompleteProfileDto(
-        @NotNull
-        @Size(min = 3,message = "minimum of 3 characters required")
-        String fName,
-
-        @Size(min = 3,message = "minimum of 3 characters required")
-        @NotNull
-        String lName,
-
+public record UpdateProfileRequest(
         @Size(min = 5,message = "minimum of 5 characters required")
         @NotNull
         String address,
-
-        @NotNull
-        @Pattern(regexp = "^[0-9]{13}$", message = "Invalid ID number")
-        String nationalId,
-
-        @NotNull
         @Pattern(regexp = "^(\\+27|0)[6-8][0-9]{8}$", message = "Invalid SA phone number")
+        @NotNull
         String phoneNumber
 ) {
 }

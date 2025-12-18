@@ -85,7 +85,7 @@ public class ClientService {
     }
 
     @Transactional
-    public CompleteProfileDto updateProfile(@Valid UpdateProfileDto updateProfileDto, String email) {
+    public CompleteProfileDto updateProfile(@Valid UpdateProfileRequest updateProfileDto, String email) {
          checkIfClientExists(email);
          Client client = clientRepository.getClientByEmail(email);
          if(!(updateProfileDto.address() == null))
@@ -97,10 +97,10 @@ public class ClientService {
          return  clientMapper.toCompletedProfileDto(client);
     }
 
-    @Transactional
-    public ClientDto getClient(String email) {
+
+    public ClientResponse getClient(String email) {
         checkIfClientExists(email);
-        return clientMapper.toClientDto(clientRepository.getClientByEmail(email));
+        return clientMapper.toClientResponse(clientRepository.getClientByEmail(email));
     }
     public List<PolicyResponse> getAllPolicies(String email) {
         checkIfClientExists(email);
@@ -127,7 +127,7 @@ public class ClientService {
     }
 
     @Transactional
-    public void deleteClient(String email) {
+    public void deActivateClient(String email) {
         checkIfClientExists(email);
         Client client = clientRepository.getClientByEmail(email);
         List<Policy> policies = client
@@ -141,15 +141,16 @@ public class ClientService {
                 .toList();
         if(!policies.isEmpty())
             throw new IllegalStateException("Client currently have active policies");
-        client.setAccountActive(false);
+        client.setEnabled(false);
         clientRepository.save(client);
     }
-   public ClientDto activateClient(String email){
+    @Transactional
+    public ClientResponse activateClient(String email){
         checkIfClientExists(email);
         Client client = clientRepository.getClientByEmail(email);
-        client.setAccountActive(true);
+        client.setEnabled(true);
         return clientMapper
-                .toClientDto(clientRepository.save(client));
+                .toClientResponse(clientRepository.save(client));
    }
 
 

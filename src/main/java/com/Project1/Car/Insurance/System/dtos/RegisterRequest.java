@@ -4,9 +4,6 @@ package com.Project1.Car.Insurance.System.dtos;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.Setter;
-
-
 
 public record RegisterRequest(
         @NotNull(message = "email must not be null")
@@ -14,7 +11,7 @@ public record RegisterRequest(
         String email,
 
         @NotNull(message = "email must not be null")
-        @Pattern(regexp = "[A-Za-z\\d]{8,20}$" ,message = "password must be 8-20 char, only letters or numbers")
+        @Pattern(regexp = "[A-Za-z\\d]{8,20}$" ,message = "password must be 8-20 char, only letters and numbers")
         String password
 ) {
 }

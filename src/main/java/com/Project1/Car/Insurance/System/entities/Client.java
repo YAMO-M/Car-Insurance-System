@@ -36,11 +36,10 @@ public class Client {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
 
-
     private Roles role;
 
     @Column(nullable = false)
-    private boolean isAccountActive;
+    private boolean isEnabled = true;
 
     //RELATIONSHIPS
     @OneToMany(mappedBy = "client",cascade = CascadeType.ALL,fetch = FetchType.LAZY)

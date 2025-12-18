@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class ClientDetailsService implements UserDetailsService {
     private final ClientRepository clientRepository;
 
+
     @Override
     public UserDetails loadUserByUsername(String clientEmail) throws UsernameNotFoundException {
         //Fetch the user
@@ -31,6 +32,7 @@ public class ClientDetailsService implements UserDetailsService {
                 .username(client.getEmail())
                 .password(client.getPassword())
                 .authorities(authority)
+                .disabled(!client.isEnabled()) // if false then spring blocks the login
                 .build();
     }
 }

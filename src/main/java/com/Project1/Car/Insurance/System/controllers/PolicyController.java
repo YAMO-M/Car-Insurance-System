@@ -2,7 +2,6 @@ package com.Project1.Car.Insurance.System.controllers;
 
 import com.Project1.Car.Insurance.System.dtos.PolicyRequest;
 import com.Project1.Car.Insurance.System.dtos.PolicyResponse;
-import com.Project1.Car.Insurance.System.dtos.VehicleResponse;
 import com.Project1.Car.Insurance.System.services.PolicyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class PolicyController {
     public ResponseEntity<PolicyResponse> addPolicy(@Valid @RequestBody PolicyRequest policyRequest, @AuthenticationPrincipal UserDetails clientDetails){
         String email = clientDetails.getUsername();
         PolicyResponse dto = policyService.addPolicy(policyRequest, email);
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.status(201).body(dto);
     }
     @GetMapping("/{policyId}")
     @PreAuthorize("hasRole('CLIENT')")

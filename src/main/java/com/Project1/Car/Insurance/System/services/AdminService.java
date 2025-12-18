@@ -1,6 +1,6 @@
 package com.Project1.Car.Insurance.System.services;
 
-import com.Project1.Car.Insurance.System.dtos.ClientDto;
+import com.Project1.Car.Insurance.System.dtos.ClientResponse;
 import com.Project1.Car.Insurance.System.dtos.PolicyResponse;
 import com.Project1.Car.Insurance.System.mappers.ClientMapper;
 import com.Project1.Car.Insurance.System.mappers.PolicyMapper;
@@ -19,11 +19,11 @@ public class AdminService {
     private final PolicyRepository policyRepository;
     private final PolicyMapper policyMapper;
 
-    public List<ClientDto> getAllClients() {
+    public List<ClientResponse> getAllClients() {
         return clientRepository
                 .findAll()
                 .stream()
-                .map(clientMapper::toClientDto)
+                .map(clientMapper::toClientResponse)
                 .toList();
     }
     public List<PolicyResponse> getAllPolicies(){

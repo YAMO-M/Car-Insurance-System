@@ -21,7 +21,7 @@ public class ClientController {
     @PostMapping(path = "/register")
     public ResponseEntity<?> registerClient(@Valid @RequestBody RegisterRequest registerRequest){
         clientService.register(registerRequest);
-        return ResponseEntity.ok("Account Registered");
+        return ResponseEntity.status(201).body("Account Registered");
     }
 
     @PreAuthorize("hasRole('CLIENT')")
@@ -34,16 +34,16 @@ public class ClientController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @PutMapping
-    public ResponseEntity<CompleteProfileDto> updateClientProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, @AuthenticationPrincipal UserDetails clientDetails){
+    public ResponseEntity<CompleteProfileDto> updateClientProfile(@Valid @RequestBody UpdateProfileRequest updateProfileRequest, @AuthenticationPrincipal UserDetails clientDetails){
         String email = clientDetails.getUsername();
-        CompleteProfileDto dto = clientService.updateProfile(updateProfileDto,email);
+        CompleteProfileDto dto = clientService.updateProfile(updateProfileRequest,email);
         return ResponseEntity.ok(dto);
     }
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping
-    public ResponseEntity<ClientDto> getClientProfile( @AuthenticationPrincipal UserDetails clientDetails){
+    public ResponseEntity<ClientResponse> getClientProfile( @AuthenticationPrincipal UserDetails clientDetails){
         String email = clientDetails.getUsername();
-        ClientDto dto = clientService.getClient(email);
+        ClientResponse dto = clientService.getClient(email);
         return ResponseEntity.ok(dto);
     }
     @PreAuthorize("hasRole('CLIENT')")
@@ -56,18 +56,18 @@ public class ClientController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping
-    public ResponseEntity<?> deleteClient(@AuthenticationPrincipal UserDetails clientDetails){
+    public ResponseEntity<?> deActivateClient(@AuthenticationPrincipal UserDetails clientDetails){
         String email = clientDetails.getUsername();
-        clientService.deleteClient(email);
+        clientService.deActivateClient(email);
         return ResponseEntity
                 .noContent()
                 .build();
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<ClientDto> activateClient(@AuthenticationPrincipal UserDetails clientDetails){
+    public ResponseEntity<ClientResponse> activateClient(@AuthenticationPrincipal UserDetails clientDetails){
         String email = clientDetails.getUsername();
-        ClientDto dto = clientService.activateClient(email);
+        ClientResponse dto = clientService.activateClient(email);
         return ResponseEntity.ok(dto);
     }
 

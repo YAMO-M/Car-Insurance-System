@@ -1,13 +1,13 @@
 package com.Project1.Car.Insurance.System.dtos;
 import lombok.Builder;
 @Builder
-public record ClientDto(
+public record ClientResponse(
         String email,
-        boolean profileCompleted,
         String fName,
         String lName,
         String address,
         String nationalId,
-        String phoneNumber
+        String phoneNumber,
+        boolean profileCompleted
 ) {
 }

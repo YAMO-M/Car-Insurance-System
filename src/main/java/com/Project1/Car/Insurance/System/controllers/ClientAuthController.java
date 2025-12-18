@@ -32,7 +32,6 @@ public class ClientAuthController {
                         )
                 );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
         if(!userDetails.getAuthorities()
                 .contains(new SimpleGrantedAuthority("ROLE_CLIENT"))) {
             return ResponseEntity.status(401).body(null);

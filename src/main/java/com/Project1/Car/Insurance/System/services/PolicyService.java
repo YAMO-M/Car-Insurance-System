@@ -94,9 +94,6 @@ public class PolicyService {
         int currentYear = LocalDate.now().getYear();
         int age = currentYear - carYear;
 
-
-
-
         if(age < 3)
             return 0.9;
         else if(age < 8)

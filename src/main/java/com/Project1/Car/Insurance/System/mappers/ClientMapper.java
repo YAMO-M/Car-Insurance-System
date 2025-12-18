@@ -1,6 +1,6 @@
 package com.Project1.Car.Insurance.System.mappers;
 
-import com.Project1.Car.Insurance.System.dtos.ClientDto;
+import com.Project1.Car.Insurance.System.dtos.ClientResponse;
 import com.Project1.Car.Insurance.System.dtos.CompleteProfileDto;
 import com.Project1.Car.Insurance.System.dtos.RegisterRequest;
 import com.Project1.Car.Insurance.System.entities.Client;
@@ -23,7 +23,6 @@ public class ClientMapper {
         client.setNationalId(completeProfileDto.nationalId());
         client.setPhoneNumber(completeProfileDto.phoneNumber());
         client.setProfileCompleted(true);
-        client.setAccountActive(true);
         return client;
     }
 
@@ -38,8 +37,8 @@ public class ClientMapper {
                 .build();
     }
 
-    public ClientDto toClientDto(Client client) {
-        return ClientDto
+    public ClientResponse toClientResponse(Client client) {
+        return ClientResponse
                 .builder()
                 .fName(client.getFName())
                 .lName(client.getLName())

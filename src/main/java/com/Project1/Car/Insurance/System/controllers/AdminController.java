@@ -1,6 +1,6 @@
 package com.Project1.Car.Insurance.System.controllers;
 
-import com.Project1.Car.Insurance.System.dtos.ClientDto;
+import com.Project1.Car.Insurance.System.dtos.ClientResponse;
 import com.Project1.Car.Insurance.System.dtos.PolicyResponse;
 import com.Project1.Car.Insurance.System.services.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,8 @@ public class AdminController {
 
     @GetMapping("/clients")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ClientDto>> getAllClients(){
-        List<ClientDto> clientDtos = adminService.getAllClients();
+    public ResponseEntity<List<ClientResponse>> getAllClients(){
+        List<ClientResponse> clientDtos = adminService.getAllClients();
         return ResponseEntity.ok(clientDtos);
     }
     @GetMapping("/policies")
