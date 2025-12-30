@@ -43,6 +43,7 @@ public class ClientService {
     @Transactional
     public CompleteProfileDto completeProfile(@Valid CompleteProfileDto completeProfileDto, String email) {
         checkIfClientExists(email);
+        if(clientRepository.isProfileCompleted(email)) throw new IllegalStateException("Profile already completed");
         LocalDate clientDoB = calculateDoB(completeProfileDto.nationalId());
         if (!validateAge(clientDoB)) throw new IllegalStateException("Client must be at least 18 years old");
         if(clientRepository.existsClientByNationalId(completeProfileDto.nationalId())) throw new IllegalStateException("client with this national Id already exist");

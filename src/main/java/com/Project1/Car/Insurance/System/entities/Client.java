@@ -28,7 +28,6 @@ public class Client {
     @Column(nullable = false)
     private String password;
 
-
     @Column(nullable = false)
     @Builder.Default
     private boolean profileCompleted = false;
@@ -39,6 +38,7 @@ public class Client {
     private Roles role;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean isEnabled = true;
 
     //RELATIONSHIPS
@@ -57,7 +57,7 @@ public class Client {
 
     private LocalDate dateOfBirth;
 
-    @Column(unique = true)
+    @Column(unique = true, updatable = false)
     private String nationalId;
 
     @Column(unique = true)
