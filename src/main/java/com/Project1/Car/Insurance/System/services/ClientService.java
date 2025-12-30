@@ -74,8 +74,6 @@ public class ClientService {
             if (day > 31 || day < 0) throw new IllegalStateException("Valid day required");
 
             return LocalDate.of(year,month,day);
-
-
         }
         catch (NumberFormatException e){
             throw new IllegalStateException("Valid National Id required");

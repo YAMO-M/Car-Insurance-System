@@ -17,7 +17,7 @@ public record VehicleRequest(
         @NotNull
         Integer year,
         @NotNull
-        @Pattern(regexp = "[A-Za-z\\d]{4,16}$" ,message = "password must be 4-16 char, only letters and numbers")
+        @Pattern(regexp = "[A-Za-z\\d]{4,16}$" ,message = "licence plate must be 4-16 char, only letters and numbers")
         String licence_plate
 ) {
 }

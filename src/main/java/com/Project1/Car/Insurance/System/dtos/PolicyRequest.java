@@ -9,7 +9,6 @@ public record PolicyRequest(
         @NotNull
         PolicyType policyType,
         @NotNull
-        @org.hibernate.validator.constraints.UUID
         UUID vehicleId
 ) {
 }

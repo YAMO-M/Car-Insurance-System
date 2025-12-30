@@ -22,13 +22,13 @@ public class Vehicle {
     @Column(nullable = false)
     private String model;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true,updatable = false)
     private String vin;
 
     @Column(nullable = false)
     private Integer year;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String licence_plate;
 
     // RELATIONSHIPS

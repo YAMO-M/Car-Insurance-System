@@ -3,7 +3,6 @@ package com.Project1.Car.Insurance.System.security;
 import com.Project1.Car.Insurance.System.entities.Client;
 import com.Project1.Car.Insurance.System.repositories.ClientRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
