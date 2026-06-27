@@ -21,7 +21,7 @@ public class ClientDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String clientEmail) throws UsernameNotFoundException {
         //Fetch the user
-        Client client = clientRepository.getClientByEmail(clientEmail);
+        Client client = clientRepository.findClientByEmail(clientEmail);
         if(client == null ) throw new UsernameNotFoundException("User not found");
 
         //Grant Authority

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,21 +24,33 @@ public class ClientAuthController {
     private final JwtService jwtService;
 
     @PostMapping(path = "/login")
-    public ResponseEntity<AuthResponse> login (@RequestBody AuthRequest authRequest){
-        Authentication authentication = authenticationManager
-                .authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                authRequest.email(),
-                                authRequest.password()
-                        )
-                );
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        if(!userDetails.getAuthorities()
-                .contains(new SimpleGrantedAuthority("ROLE_CLIENT"))) {
+    public ResponseEntity<AuthResponse> login (@RequestBody AuthRequest authRequest) {
+        try {
+            // create auth token
+            Authentication authentication = authenticationManager
+                    // triggers auth chain: loadUserByUsername->passwordEncoder-> returns Auth with userdetails
+                    .authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    authRequest.email(),
+                                    authRequest.password()
+                            )
+                    );
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal(); // user object
+
+            // check if user is a client
+            if (!userDetails.getAuthorities()
+                    .contains(new SimpleGrantedAuthority("ROLE_CLIENT"))) {
+                return ResponseEntity.status(401).body(null);
+            }
+
+            // we create our token containing user details,roles,secrete key,exp time
+            String jwt = jwtService.generateToken(userDetails);
+
+            return ResponseEntity.ok(new AuthResponse(jwt));
+        }
+        catch (AuthenticationException e){
             return ResponseEntity.status(401).body(null);
         }
-        String jwt = jwtService.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthResponse(jwt));
     }
 
 

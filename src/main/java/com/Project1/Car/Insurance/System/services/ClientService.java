@@ -51,7 +51,7 @@ public class ClientService {
 
         Client client = clientMapper
                 .toCompletedClient(
-                        clientRepository.getClientByEmail(email),
+                        clientRepository.findClientByEmail(email),
                         completeProfileDto
                 );
 
@@ -86,7 +86,7 @@ public class ClientService {
     @Transactional
     public CompleteProfileDto updateProfile(@Valid UpdateProfileRequest updateProfileDto, String email) {
          checkIfClientExists(email);
-         Client client = clientRepository.getClientByEmail(email);
+         Client client = clientRepository.findClientByEmail(email);
          if(!(updateProfileDto.address() == null))
               client.setAddress(updateProfileDto.address());
          if(!(updateProfileDto.phoneNumber() == null))
@@ -99,12 +99,12 @@ public class ClientService {
 
     public ClientResponse getClient(String email) {
         checkIfClientExists(email);
-        return clientMapper.toClientResponse(clientRepository.getClientByEmail(email));
+        return clientMapper.toClientResponse(clientRepository.findClientByEmail(email));
     }
     public List<PolicyResponse> getAllPolicies(String email) {
         checkIfClientExists(email);
         return clientRepository
-                .getClientByEmail(email)
+                .findClientByEmail(email)
                 .getPolicies()
                 .stream()
                 .map(policyMapper::toPolicyResponse)
@@ -114,7 +114,7 @@ public class ClientService {
     public List<VehicleResponse> getAllVehicles(String email) {
         checkIfClientExists(email);
         return clientRepository
-                .getClientByEmail(email)
+                .findClientByEmail(email)
                 .getVehicles()
                 .stream()
                 .map(vehicleMapper::toVehicleResponse)
@@ -128,7 +128,7 @@ public class ClientService {
     @Transactional
     public void deActivateClient(String email) {
         checkIfClientExists(email);
-        Client client = clientRepository.getClientByEmail(email);
+        Client client = clientRepository.findClientByEmail(email);
         List<Policy> policies = client
                 .getPolicies()
                 .stream()
@@ -146,7 +146,7 @@ public class ClientService {
     @Transactional
     public ClientResponse activateClient(String email){
         checkIfClientExists(email);
-        Client client = clientRepository.getClientByEmail(email);
+        Client client = clientRepository.findClientByEmail(email);
         client.setEnabled(true);
         return clientMapper
                 .toClientResponse(clientRepository.save(client));

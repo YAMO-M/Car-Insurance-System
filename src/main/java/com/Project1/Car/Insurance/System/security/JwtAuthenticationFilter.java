@@ -27,6 +27,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           final String token;
           final String email;
 
+          // skip jwt on auth urls
+          String requestPath = request.getRequestURI();
+          if(requestPath.startsWith("/auth/")){
+              filterChain.doFilter(request,response);
+              return;
+          }
+
           if(authHeader == null || !authHeader.startsWith("Bearer ")){
               filterChain.doFilter(request,response); // maybe user is login/register continue with the filter chain
               return;
@@ -41,8 +48,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
               return;
           }
           if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){ // check if user already authenticated. prevents re-authenticating user
+
               UserDetails userDetails = compositeUserDetailsService.loadUserByUsername(email);
+
               if(jwtService.isTokenValid(token,userDetails)){
+                  // create auth token
                   UsernamePasswordAuthenticationToken authenticationToken =
                           new UsernamePasswordAuthenticationToken(
                                   userDetails,

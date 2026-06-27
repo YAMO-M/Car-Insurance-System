@@ -29,7 +29,7 @@ public class VehicleService{
         checkIfClientExists(email);
         checkAccountCompletion(email);
 
-        Client client = clientRepository.getClientByEmail(email);
+        Client client = clientRepository.findClientByEmail(email);
         Vehicle vehicle = vehicleMapper.toVehicle(vehicleRequest);
 
         if(vehicle.getYear() < LocalDate.now().minusYears(15).getYear()) throw new IllegalStateException(" Vehicle must be less than 15 years old");
@@ -85,7 +85,7 @@ public class VehicleService{
         return vehicle;
     }
     private void checkAccountCompletion(String email){
-        if(!clientRepository.getClientByEmail(email).isProfileCompleted())
+        if(!clientRepository.findClientByEmail(email).isProfileCompleted())
             throw new IllegalStateException("complete profile to continue");
     }
 }

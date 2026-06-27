@@ -25,6 +25,7 @@ public class AdminAuthController {
 
     @PostMapping(path = "/login")
     public ResponseEntity<AuthResponse> login (@RequestBody AuthRequest authRequest){
+        // why not use Auth Manager, it uses only 1 UserDetailService  (we missing security here)
         try {
             // manually load the admin
             UserDetails adminDetails = adminDetailsService.loadUserByUsername(authRequest.email());

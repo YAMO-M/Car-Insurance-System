@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, UUID> {
-    Client getClientByEmail(String email);
+    Client findClientByEmail(String email);
     boolean existsClientByEmail(String email);
     boolean existsClientByNationalId(String nationalId);
     boolean existsClientByPhoneNumber(String s);

@@ -1,6 +1,7 @@
 spring:
   application:
     name: Car-Insurance-System
+    port: 8081
   datasource:
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:car_insurance_system.db

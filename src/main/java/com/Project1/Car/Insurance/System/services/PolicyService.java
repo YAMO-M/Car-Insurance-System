@@ -28,7 +28,7 @@ public class PolicyService {
 
         validateClient(email,policyRequest.vehicleId());
 
-        Client client = clientRepository.getClientByEmail(email);
+        Client client = clientRepository.findClientByEmail(email);
         Vehicle vehicle = vehicleRepository.findByVehicleId(policyRequest.vehicleId());
         if(!vehicle.getClient().getEmail().equals(email))
             throw new IllegalStateException("Forbidden Access");
@@ -111,11 +111,10 @@ public class PolicyService {
             throw new IllegalStateException("Policy Type: " + policyType + " is not available");
     }
 
-
     private void validateClient(String email,UUID vehicleId){
         if(!clientRepository.existsClientByEmail(email))
             throw new IllegalStateException("client does not exist");
-        if(!clientRepository.getClientByEmail(email).isProfileCompleted())
+        if(!clientRepository.findClientByEmail(email).isProfileCompleted())
             throw new IllegalStateException("complete profile to continue");
         if(!vehicleRepository.existsById(vehicleId))
             throw new IllegalStateException("vehicle does not exist");
@@ -135,6 +134,7 @@ public class PolicyService {
 
         return policy;
     }
+
     private void checkIfClientExists(String email){
         if(!clientRepository.existsClientByEmail(email))
             throw new IllegalStateException("client does not exist");
@@ -142,9 +142,12 @@ public class PolicyService {
 
     public void cancelPolicy(UUID policyId, String email) {
         changePolicyStatus(policyId,email,PolicyStatus.CANCELLED);
-    }public void renewPolicy(UUID policyId, String email) {
+    }
+
+    public void renewPolicy(UUID policyId, String email) {
         changePolicyStatus(policyId,email,PolicyStatus.ACTIVE);
     }
+
     private void changePolicyStatus(UUID policyId,String email, PolicyStatus policyStatus){
         Policy policy = validatePolicy(policyId,email);
         policy.setPolicyStatus(policyStatus);
@@ -154,7 +157,7 @@ public class PolicyService {
     public List<PolicyResponse> getExpiredPolicies(String email) {
         checkIfClientExists(email);
         return clientRepository
-                .getClientByEmail(email)
+                .findClientByEmail(email)
                 .getPolicies()
                 .stream()
                 .filter(
@@ -164,6 +167,7 @@ public class PolicyService {
                 .map(policyMapper::toPolicyResponse)
                 .toList();
     }
+
     private boolean checkPolicyExpiry(LocalDate expiryDate){
         LocalDate localDate = LocalDate.now();
         return localDate.isAfter(expiryDate);
